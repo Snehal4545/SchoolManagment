@@ -1,0 +1,123 @@
+﻿using Dapper;
+using SchoolManagment.Model;
+using SchoolManagment.Repository.Interface;
+using System.Data.Common;
+using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
+
+namespace SchoolManagment.Repository
+{
+    public class tblschoolRepository : BaseAsyncRepository, ItblSchoolRepository
+    {
+        public tblschoolRepository(IConfiguration _con) : base(_con)
+        {
+
+        }
+
+        public async Task<List<tblSchool>> GetAllSchool()
+        {
+            List<tblSchool> school = new List<tblSchool>();
+            var sql = "select * from tblSchool";
+            using (DbConnection con = SqlReaderConnection)
+            {
+                await con.OpenAsync();
+
+                var res = await con.QueryAsync<tblSchool>(sql);
+                school = res.ToList();
+                foreach (var schools in school)
+                {
+                    var class1 = await con.QueryAsync<tblClass>("select * from tblclass where schoolid=@Id", new { schools.Id });
+                    schools.classlist = class1.ToList();
+
+                    foreach (var classes in class1)
+                    {
+                        var res1 = await con.QueryAsync<tblStudent>("select * from tblstudent where ClassId=@Id", new { classes.Id });
+                        classes.studlist = res1.ToList();
+                    }
+                    foreach (var teacher in school)
+                    {
+                        var tech = await con.QueryAsync<tblTeacher>("select * from tblTeacher where schoolid=@Id", new { teacher.Id });
+                        teacher.teachlist = tech.ToList();
+                    }
+
+                }
+            }
+            return school;
+
+
+        }
+
+        public async Task<List<tblSchool>> GetAllSchoolById(int id)
+        {
+            List<tblSchool> schoolList = new List<tblSchool>();
+            var query = "select * from tblschool where id=@id";
+            using (DbConnection con = SqlReaderConnection)
+            {
+                await con.OpenAsync();
+
+                var res = await con.QueryAsync<tblSchool>(query, new { id });
+                schoolList = res.ToList();
+
+                foreach (var schlst in schoolList)
+                {
+                    var res1 = await con.QueryAsync<tblClass>("select * from tblclass where schoolid=@id",
+                                                            new { schlst.Id });
+                    schlst.classlist = res1.ToList();
+
+                    foreach (var stud in res1)
+                    {
+                        var res3 = await con.QueryAsync<tblStudent>("select * from tblStudent where classId=@Id",
+                                                                    new { stud.Id });
+                        stud.studlist = res3.ToList();
+                    }
+
+                    foreach (var tchlist in schoolList)
+                    {
+                        var res2 = await con.QueryAsync<tblTeacher>("select * from tblTeacher where schoolid=@id",
+                                                                    new { tchlist.Id });
+                        tchlist.teachlist = res2.ToList();
+                    }
+                }
+
+            }
+            return schoolList;
+
+
+        }
+        public async Task<int> SaveInformation(tblSchool sch)
+        {
+            var query = "insert into tblschool( SchoolName ,Grade , NoOfTeacher,  SchoolAddress , Telephone ,SchoolType, Established, " +
+                        "  createdBy ,createdDate,Isdeleted)   values( @SchoolName, @Grade , @NoOfTeacher,  @SchoolAddress ," +
+                        " @Telephone ,@SchoolType, @Established, 1 ,@createdDate,0);select cast(scope_identity() as int )";
+            using(DbConnection con = SqlReaderConnection)
+            {
+                await con.OpenAsync();
+                sch.createdDate = DateTime.Now;
+                var res1= await con.QueryFirstOrDefaultAsync<int>(query,sch);
+                foreach(var teacher in sch.teachlist)
+                {
+                    await SaveTeacher(teacher,res1);
+                }
+              
+                return res1;
+
+            }
+        }
+        public async Task SaveTeacher(tblTeacher tech,int id)
+        {
+            var query = "Insert into tblTeacher(TeacherName,  MobileNum , EmailId, TeacherAddress , JoiningDate, Subject, IsDeleted,  SchoolId )" +
+                "values(@TeacherName, @MobileNum , @EmailId, @TeacherAddress , @JoiningDate, @Subject, 0,  @SchoolId )";
+
+            using(DbConnection con=SqlReaderConnection)
+            {
+                tech.SchoolId = id;
+                await con.OpenAsync();
+                var res1= await con.ExecuteAsync(query,tech);
+            }
+
+        }
+    }
+}
+
+
