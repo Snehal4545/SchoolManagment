@@ -106,8 +106,8 @@ namespace SchoolManagment.Repository
         }
         public async Task SaveTeacher(tblTeacher tech,int id)
         {
-            var query = "Insert into tblTeacher(TeacherName,  MobileNum , EmailId, TeacherAddress , JoiningDate, Subject, IsDeleted,  SchoolId )" +
-                "values(@TeacherName, @MobileNum , @EmailId, @TeacherAddress , @JoiningDate, @Subject, 0,  @SchoolId )";
+            var query = "Insert into tblTeacher(TeacherName,MobileNum,EmailId,TeacherAddress ,JoiningDate,Subject,IsDeleted,SchoolId )" +
+                "values(@TeacherName, @MobileNum , @EmailId, @TeacherAddress , @JoiningDate, @Subject, 0, @SchoolId )";
 
             using(DbConnection con=SqlReaderConnection)
             {
