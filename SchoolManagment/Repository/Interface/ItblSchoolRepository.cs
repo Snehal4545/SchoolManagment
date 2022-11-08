@@ -7,7 +7,8 @@ namespace SchoolManagment.Repository.Interface
       public  Task<List<tblSchool>> GetAllSchool();
       public Task<List<tblSchool>> GetAllSchoolById(int id);
       public  Task<int> SaveInformation(tblSchool sch);
-       // public Task SaveTeacher(tblTeacher tech);
+      // public Task SaveTeacher(tblTeacher tech);
+      public  Task<int> UpdateSchool(tblSchool sch);
 
     }
 }

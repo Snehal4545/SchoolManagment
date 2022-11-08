@@ -122,13 +122,51 @@ namespace SchoolManagment.Controllers
             }
             else
             {
-                var rtnmsg = string.Format("Record updated successfully..");
+                var rtnmsg = string.Format("Record added successfully..");
                 _logger.LogDebug(rtnmsg);
                 responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
                 responseStatus.StatusMessage = rtnmsg;
                 return Ok(responseStatus);
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateSchool(tblSchool sch)
+        {
+            BaseResponseStatus responseStatus = new BaseResponseStatus();
+            _logger.LogDebug(string.Format("tblSchoolController-SaveInformation Calling By save Information  method"));
+            if(sch!=null)
+            {
+              var execution= await tblschoolRepository.UpdateSchool(sch);
+                if(execution>=1)
+                {
+                    var rtnmsg = string.Format("Record Updated Successfully");
+                    _logger.LogDebug(rtnmsg);
+                    responseStatus.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseStatus.StatusMessage = rtnmsg;
+                    responseStatus.ResponseStatus = execution;
+                    return Ok(responseStatus);
+                }
+                else
+                {
+                    var rtnmsg = string.Format("Error while updating");
+                    _logger.LogDebug(rtnmsg);
+                    responseStatus.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseStatus.StatusMessage = rtnmsg;
+                    return Ok(responseStatus);
+                }
+            }
+            else
+            {
+                var rtnmsg = string.Format("Record Updated Successfully");
+                _logger.LogDebug(rtnmsg);
+                responseStatus.StatusCode= StatusCodes.Status200OK.ToString();
+                responseStatus.StatusMessage= rtnmsg;
+                return Ok(responseStatus);
+            }
+
+
+        }
+
        
     }
 }

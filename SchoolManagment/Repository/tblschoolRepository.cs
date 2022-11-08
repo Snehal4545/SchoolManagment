@@ -117,6 +117,35 @@ namespace SchoolManagment.Repository
             }
 
         }
+        public async Task<int> UpdateSchool(tblSchool sch)
+        {
+            int res1;
+            var query = "update tblSchool set SchoolName=@SchoolName ,Grade=@Grade , NoOfTeacher=@NoOfTeacher,  SchoolAddress=@SchoolAddress " +
+                ", Telephone=@Telephone ,SchoolType=@SchoolType, Established=@Established, modifiedBy=1,modifiedDate=@modifiedDate" +
+                ", Isdeleted=0 where Id=@Id ";
+            using(DbConnection con= SqlReaderConnection)
+            {
+                await con.OpenAsync();
+                sch.modifiedDate= DateTime.Now;
+                 res1=await con.ExecuteAsync(query,sch);
+               
+               
+            }
+            return res1;
+
+        }
+        public async Task<int>  UpdateTeacher(tblTeacher tech)
+        {
+            int rtn1;
+            var query = "Update tblTeacher set TeacherName=@TeacherName, MobileNum=@MobileNum, EmailId=@EmailId, " +
+                        "TeacherAddress=@TeacherAddress ,JoiningDate=@JoiningDate, Subject=@Subject,Isdeleted=0 where id=@id ";
+            using(DbConnection con=SqlReaderConnection)
+            {
+                await con.OpenAsync();
+                rtn1 = await con.ExecuteAsync(query, tech);
+            }
+            return rtn1;
+        }
     }
 }
 
