@@ -106,8 +106,8 @@ namespace SchoolManagment.Repository
         }
         public async Task SaveTeacher(tblTeacher tech,int id)
         {
-            var query = "Insert into tblTeacher(TeacherName,MobileNum,EmailId,TeacherAddress ,JoiningDate,Subject,IsDeleted,SchoolId )" +
-                "values(@TeacherName, @MobileNum , @EmailId, @TeacherAddress , @JoiningDate, @Subject, 0, @SchoolId )";
+            var query = " Insert into tblTeacher(TeacherName,MobileNum,EmailId,TeacherAddress ,JoiningDate,Subject,IsDeleted,SchoolId )" +
+                        " values(@TeacherName, @MobileNum , @EmailId, @TeacherAddress , @JoiningDate, @Subject, 0, @SchoolId )";
 
             using(DbConnection con=SqlReaderConnection)
             {
@@ -117,7 +117,7 @@ namespace SchoolManagment.Repository
             }
 
         }
-        public async Task<int> UpdateSchool(tblSchool sch)
+        public async Task<int> UpdateSchool(UpdateSchool sch)
         {
             int res1;
             var query = "update tblSchool set SchoolName=@SchoolName ,Grade=@Grade , NoOfTeacher=@NoOfTeacher,  SchoolAddress=@SchoolAddress " +
@@ -134,17 +134,21 @@ namespace SchoolManagment.Repository
             return res1;
 
         }
-        public async Task<int> UpdateTeacher(tblTeacher tech)
+        public async Task<string> UpdateTeacher(tblTeacher tech)
         {
             int rtn1;
-            var query = "Update tblTeacher set TeacherName=@TeacherName, MobileNum=@MobileNum, EmailId=@EmailId, " +
-                        "TeacherAddress=@TeacherAddress ,JoiningDate=@JoiningDate, Subject=@Subject,Isdeleted=0 where id=@id ";
+            string message = null;
+            var query = " Update tblTeacher set TeacherName=@TeacherName, MobileNum=@MobileNum, EmailId=@EmailId, " +
+                        " TeacherAddress=@TeacherAddress ,JoiningDate=@JoiningDate, Subject=@Subject,SchoolId=@SchoolId,Isdeleted=0" +
+                        "where id=@id ";
             using(DbConnection con=SqlReaderConnection)
             {
                 await con.OpenAsync();
+             
                 rtn1 = await con.ExecuteAsync(query, tech);
+                message = "data Updated Successfully";
             }
-            return rtn1;
+            return message;
         }
         public async Task<int> DeleteSchool(BaseModel.DeleteObj delete)
         {
@@ -154,10 +158,11 @@ namespace SchoolManagment.Repository
                 using(DbConnection con=SqlReaderConnection)
                 {
                     await con.OpenAsync();
-                     result= await con.ExecuteAsync("Update tblschool set Isdeleted='True' where id=@id", new {id=delete.Id});
+                    result= await con.ExecuteAsync("Update tblschool set Isdeleted='True' where id=@id", new {id=delete.Id});
                 }
             }
             return result;
+           
 
 
         }
