@@ -146,6 +146,21 @@ namespace SchoolManagment.Repository
             }
             return rtn1;
         }
+        public async Task<int> DeleteSchool(BaseModel.DeleteObj delete)
+        {
+            int result=0;
+            if(delete.Id!=0)
+            {
+                using(DbConnection con=SqlReaderConnection)
+                {
+                    await con.OpenAsync();
+                     result= await con.ExecuteAsync("Update tblschool set Isdeleted='True' where id=@id", new {id=delete.Id});
+                }
+            }
+            return result;
+
+
+        }
     }
 }
 

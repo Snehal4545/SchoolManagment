@@ -166,6 +166,33 @@ namespace SchoolManagment.Controllers
 
 
         }
+        [HttpDelete]
+        public async Task<IActionResult>DeleteSchool(BaseModel.DeleteObj delete)
+        {
+            BaseResponseStatus baseResponseStatus = new BaseResponseStatus();
+            _logger.LogDebug(string.Format($"tblSchoolController-DeleteSchool: Calling delete action with{delete.Id}"));
+
+            var execution = await tblschoolRepository.DeleteSchool(delete);
+            if(execution==0)
+            {
+                var rtnmsg = string.Format($"Record with Id {delete.Id} does not exist");
+                _logger.LogDebug(rtnmsg);
+                baseResponseStatus.StatusCode=StatusCodes.Status404NotFound.ToString();
+                baseResponseStatus.StatusMessage=rtnmsg;
+                return Ok(baseResponseStatus);
+            }
+            else
+            {
+                var rtnmsg = string.Format($"Record with Id{delete.Id} Deleted successfully");
+                _logger.LogDebug(rtnmsg);
+                baseResponseStatus.StatusCode = StatusCodes.Status200OK.ToString();
+                baseResponseStatus.StatusMessage = rtnmsg;
+                baseResponseStatus.ResponseStatus = execution;
+                return Ok(baseResponseStatus);
+            }
+
+           // return Ok(baseResponseStatus);
+        }
 
        
     }
