@@ -134,7 +134,7 @@ namespace SchoolManagment.Repository
             return res1;
 
         }
-        public async Task<int>  UpdateTeacher(tblTeacher tech)
+        public async Task<int> UpdateTeacher(tblTeacher tech)
         {
             int rtn1;
             var query = "Update tblTeacher set TeacherName=@TeacherName, MobileNum=@MobileNum, EmailId=@EmailId, " +
