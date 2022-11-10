@@ -129,6 +129,42 @@ namespace SchoolManagment.Controllers
                 return Ok(responseStatus);
             }
         }
+        [HttpPut("AddTeacher")]
+        public async Task<IActionResult> AddTeacher(tblTeacher tech)
+        {
+            BaseResponseStatus responseStatus = new BaseResponseStatus();
+            _logger.LogDebug(string.Format("tblSchoolController-SaveInformation Calling By save Information  method"));
+            if (tech != null)
+            {
+                var execution = await tblschoolRepository.AddTeacher(tech);
+                if (execution >= 1)
+                {
+                    var rtnmsg = string.Format("Record added successfully..");
+                    _logger.LogInformation(rtnmsg);
+                    _logger.LogDebug(string.Format("tblSchoolController-SaveInformation : Completed "));
+                    responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
+                    responseStatus.StatusMessage = rtnmsg;
+                    return Ok(responseStatus);
+
+                }
+                else
+                {
+                    var rtnmsg = string.Format("Error while updating");
+                    _logger.LogDebug(rtnmsg);
+                    responseStatus.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseStatus.StatusMessage = rtnmsg;
+                    return Ok(responseStatus);
+                }
+            }
+            else
+            {
+                var rtnmsg = string.Format("Record added successfully..");
+                _logger.LogDebug(rtnmsg);
+                responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
+                responseStatus.StatusMessage = rtnmsg;
+                return Ok(responseStatus);
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> UpdateSchool(UpdateSchool sch)
         {
@@ -174,7 +210,7 @@ namespace SchoolManagment.Controllers
             if(tech!=null)
             {
                 var execution =await  tblschoolRepository.UpdateTeacher(tech);
-                if(execution != null)
+                if(execution >= 1)
                 {
                     var rtnmsg = string.Format("record Updated successfully");
                     _logger.LogDebug(rtnmsg);

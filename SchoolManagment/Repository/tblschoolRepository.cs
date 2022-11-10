@@ -94,10 +94,12 @@ namespace SchoolManagment.Repository
             {
                 await con.OpenAsync();
                 sch.createdDate = DateTime.Now;
+                sch.NoOfTeacher = sch.teachlist.Count;
                 var res1= await con.QueryFirstOrDefaultAsync<int>(query,sch);
                 foreach(var teacher in sch.teachlist)
                 {
                     await SaveTeacher(teacher,res1);
+                  
                 }
               
                 return res1;
@@ -117,6 +119,29 @@ namespace SchoolManagment.Repository
             }
 
         }
+        public async Task<int> AddTeacher(tblTeacher tech)
+        {
+            List<tblSchool>sch=new List<tblSchool>();
+            var query = " Insert into tblTeacher(TeacherName,MobileNum,EmailId,TeacherAddress,JoiningDate,Subject,IsDeleted,SchoolId) " +
+                        " values(@TeacherName,@MobileNum,@EmailId,@TeacherAddress,@JoiningDate,@Subject,0,@SchoolId);" +
+                        "select cast(scope_identity() as int) ";
+            using(DbConnection con= SqlReaderConnection)
+            {
+                await con.OpenAsync();
+                var rtn = await con.QueryFirstOrDefaultAsync<int>(query, tech);
+                var qry1 = "select noOfTeacher from tblSchool where Id=@id";
+                var res1=await con.QuerySingleAsync<tblSchool>(qry1, new {id=tech.SchoolId});
+                int techcount = res1.NoOfTeacher;
+                techcount++;
+                var qry = "Update tblSchool set NoOfTeacher=@techcount where Id=@id";
+
+                var res2 = await con.ExecuteAsync(qry, new {techcount,id=tech.SchoolId});
+
+               
+                return rtn;
+            }
+
+        }
         public async Task<int> UpdateSchool(UpdateSchool sch)
         {
             int res1;
@@ -127,28 +152,28 @@ namespace SchoolManagment.Repository
             {
                 await con.OpenAsync();
                 sch.modifiedDate= DateTime.Now;
-                 res1=await con.ExecuteAsync(query,sch);
+                
+                res1=await con.ExecuteAsync(query,sch);
                
                
             }
             return res1;
 
         }
-        public async Task<string> UpdateTeacher(tblTeacher tech)
+        public async Task<int> UpdateTeacher(tblTeacher tech)
         {
             int rtn1;
-            string message = null;
+           
             var query = " Update tblTeacher set TeacherName=@TeacherName, MobileNum=@MobileNum, EmailId=@EmailId, " +
                         " TeacherAddress=@TeacherAddress ,JoiningDate=@JoiningDate, Subject=@Subject,SchoolId=@SchoolId,Isdeleted=0" +
                         "where id=@id ";
             using(DbConnection con=SqlReaderConnection)
             {
                 await con.OpenAsync();
-             
                 rtn1 = await con.ExecuteAsync(query, tech);
-                message = "data Updated Successfully";
+                
             }
-            return message;
+            return rtn1;
         }
         public async Task<int> DeleteSchool(BaseModel.DeleteObj delete)
         {
