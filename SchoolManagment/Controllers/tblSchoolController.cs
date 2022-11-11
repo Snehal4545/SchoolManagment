@@ -165,6 +165,42 @@ namespace SchoolManagment.Controllers
                 return Ok(responseStatus);
             }
         }
+        [HttpPut("AddClass")]
+        public async Task<IActionResult> AddClass(tblClass cls)
+        {
+            BaseResponseStatus responseStatus = new BaseResponseStatus();
+            _logger.LogDebug(string.Format("tblSchoolController-SaveInformation Calling By save Information  method"));
+            if (cls != null)
+            {
+                var execution = await tblschoolRepository.AddClass(cls);
+                if (execution >= 1)
+                {
+                    var rtnmsg = string.Format("Record added successfully..");
+                    _logger.LogInformation(rtnmsg);
+                    _logger.LogDebug(string.Format("tblSchoolController-SaveInformation : Completed "));
+                    responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
+                    responseStatus.StatusMessage = rtnmsg;
+                    return Ok(responseStatus);
+
+                }
+                else
+                {
+                    var rtnmsg = string.Format("Error while updating");
+                    _logger.LogDebug(rtnmsg);
+                    responseStatus.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseStatus.StatusMessage = rtnmsg;
+                    return Ok(responseStatus);
+                }
+            }
+            else
+            {
+                var rtnmsg = string.Format("Record added successfully..");
+                _logger.LogDebug(rtnmsg);
+                responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
+                responseStatus.StatusMessage = rtnmsg;
+                return Ok(responseStatus);
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> UpdateSchool(UpdateSchool sch)
         {

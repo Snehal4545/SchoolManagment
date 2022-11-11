@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using SchoolManagment.Model;
 using SchoolManagment.Repository.Interface;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
@@ -56,7 +57,7 @@ namespace SchoolManagment.Repository
             {
                 await con.OpenAsync();
 
-                var res = await con.QueryAsync<tblSchool>(query, new { id });
+                var res = await con.QueryAsync<tblSchool>(query, new { id });  
                 schoolList = res.ToList();
 
                 foreach (var schlst in schoolList)
@@ -142,6 +143,21 @@ namespace SchoolManagment.Repository
             }
 
         }
+        public async Task<int> AddClass(tblClass cls)
+        {
+            var query = "Insert into tblClass(ClsStandered, Fees, SchoolId, TeacherId, IsDeleted)" +
+                        "Values(@ClsStandered, @Fees, @SchoolId, @TeacherId, 0) select cast(scope_identity()as int)";
+
+            using (DbConnection con = SqlReaderConnection)
+            {
+                
+                await con.OpenAsync();
+                var res1 = await con.QueryFirstOrDefaultAsync<int>(query,cls);
+                return res1;
+            }
+            
+
+        }
         public async Task<int> UpdateSchool(UpdateSchool sch)
         {
             int res1;
@@ -152,10 +168,8 @@ namespace SchoolManagment.Repository
             {
                 await con.OpenAsync();
                 sch.modifiedDate= DateTime.Now;
-                
                 res1=await con.ExecuteAsync(query,sch);
-               
-               
+                            
             }
             return res1;
 
