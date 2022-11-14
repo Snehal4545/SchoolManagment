@@ -274,7 +274,7 @@ namespace SchoolManagment.Controllers
             }
 
 
-        }
+        }           
         
         [HttpDelete]
         public async Task<IActionResult>DeleteSchool(BaseModel.DeleteObj delete)

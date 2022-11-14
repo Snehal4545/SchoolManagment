@@ -150,8 +150,7 @@ namespace SchoolManagment.Repository
 
             using (DbConnection con = SqlReaderConnection)
             {
-                
-                await con.OpenAsync();
+               await con.OpenAsync();
                 var res1 = await con.QueryFirstOrDefaultAsync<int>(query,cls);
                 return res1;
             }
@@ -161,7 +160,7 @@ namespace SchoolManagment.Repository
         public async Task<int> UpdateSchool(UpdateSchool sch)
         {
             int res1;
-            var query = "update tblSchool set SchoolName=@SchoolName ,Grade=@Grade , NoOfTeacher=@NoOfTeacher,  SchoolAddress=@SchoolAddress " +
+             var query = "update tblSchool set SchoolName=@SchoolName ,Grade=@Grade , NoOfTeacher=@NoOfTeacher,  SchoolAddress=@SchoolAddress " +
                 ", Telephone=@Telephone ,SchoolType=@SchoolType, Established=@Established, modifiedBy=1,modifiedDate=@modifiedDate" +
                 ", Isdeleted=0 where Id=@Id ";
             using(DbConnection con= SqlReaderConnection)
