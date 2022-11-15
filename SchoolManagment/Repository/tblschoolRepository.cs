@@ -86,6 +86,19 @@ namespace SchoolManagment.Repository
 
 
         }
+        public async Task<List<tblSchool>>GetSchoolByName(string? SchoolName)
+        {
+            List<tblSchool> schoollst = new List<tblSchool>();
+            var query = "select * from tblSchool where SchoolName like '%'+@SchoolName+'%'";
+            using(DbConnection con=SqlReaderConnection)
+            {
+                await con.OpenAsync();
+                var res=await con.QueryAsync<tblSchool>(query, new { SchoolName });
+                return res.ToList();
+
+            }
+
+        }
         public async Task<int> SaveInformation(tblSchool sch)
         {
             var query = "insert into tblschool( SchoolName ,Grade , NoOfTeacher,  SchoolAddress , Telephone ,SchoolType, Established, " +
@@ -184,7 +197,7 @@ namespace SchoolManagment.Repository
             {
                 await con.OpenAsync();
                 rtn1 = await con.ExecuteAsync(query, tech);  
-            }
+                            }
             return rtn1;
         }
         public async Task<int> DeleteSchool(BaseModel.DeleteObj delete)

@@ -93,6 +93,41 @@ namespace SchoolManagment.Controllers
 
 
         }
+        [HttpGet("SchoolName")]
+        public async Task<IActionResult> GetSchoolByName(string SchoolName)
+        {
+            BaseResponseStatus responseStatus = new BaseResponseStatus();
+
+            _logger.LogDebug(string.Format($"tblSchoolController-GetSchoolByName :Calling  action GetSchoolByName with Id {SchoolName}."));
+
+            if (SchoolName == null)
+            {
+                var returnmsg = string.Format("Please enter valid Id");
+                _logger.LogDebug(returnmsg);
+                responseStatus.StatusCode = StatusCodes.Status400BadRequest.ToString();
+                responseStatus.StatusMessage = returnmsg;
+                return Ok(responseStatus);
+            }
+            var schList = await tblschoolRepository.GetSchoolByName(SchoolName);
+            if (schList == null)
+            {
+                var retunmsg = string.Format($"Requested SchoolName {SchoolName} is not available.");
+                _logger.LogDebug(retunmsg);
+                responseStatus.StatusCode = StatusCodes.Status404NotFound.ToString();
+                responseStatus.StatusMessage = retunmsg;
+                return Ok(responseStatus);
+            }
+            var rtnmsg = string.Format($"Completed get action with  {SchoolName}.");
+            _logger.LogDebug(rtnmsg);
+            responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
+            responseStatus.StatusMessage = rtnmsg;
+            responseStatus.ResponseStatus = schList;
+            return Ok(responseStatus);
+
+
+        
+        
+        }
         [HttpPut]
         public async Task<IActionResult> SaveInformation(tblSchool sch)
         {
