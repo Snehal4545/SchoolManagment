@@ -146,7 +146,14 @@ namespace SchoolManagment.Controllers
                     return Ok(responseStatus);
 
                 }
-                else
+                else if(execution == -1)
+                {
+                    var rtnmsg = string.Format("already exists with schoolname");
+                    _logger.LogDebug(rtnmsg);
+                    responseStatus.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseStatus.StatusMessage = rtnmsg;
+                    return Ok(responseStatus);
+                }
                 {
                     var rtnmsg = string.Format("Error while updating");
                     _logger.LogDebug(rtnmsg);

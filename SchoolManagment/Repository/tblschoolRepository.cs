@@ -106,7 +106,14 @@ namespace SchoolManagment.Repository
                         " @Telephone ,@SchoolType, @Established, 1 ,@createdDate,0);select cast(scope_identity() as int )";
             using(DbConnection con = SqlReaderConnection)
             {
+
                 await con.OpenAsync();
+                var name=await con.QueryAsync("select schoolname from tblschool where schoolname=@schoolname", new {schoolname=sch.SchoolName});
+                var schoolname=name.FirstOrDefault();
+                if(schoolname!=null)
+                {
+                    return -1;
+                }
                 sch.createdDate = DateTime.Now;
                 sch.NoOfTeacher = sch.teachlist.Count;
                 var res1= await con.QueryFirstOrDefaultAsync<int>(query,sch);
@@ -131,7 +138,7 @@ namespace SchoolManagment.Repository
                 await con.OpenAsync();
                 var res1= await con.ExecuteAsync(query,tech);
             }
-
+            
         }
         public async Task<int> AddTeacher(tblTeacher tech)
         {
@@ -197,7 +204,7 @@ namespace SchoolManagment.Repository
             {
                 await con.OpenAsync();
                 rtn1 = await con.ExecuteAsync(query, tech);  
-                            }
+            }
             return rtn1;
         }
         public async Task<int> DeleteSchool(BaseModel.DeleteObj delete)
@@ -212,8 +219,7 @@ namespace SchoolManagment.Repository
                 }
             }
             return result;
-           
-
+              
 
         }
     }
