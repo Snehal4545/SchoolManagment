@@ -33,7 +33,7 @@ namespace SchoolManagment.Repository
                         vehicle.Vhlid = res.Vhlid;
                         /*
                         vehicle.Vnum = res.Vnum;
-                        vehicle.VComp = res.VComp;
+                        vehicle.VComp = res.VComp;xsz
                         vehicle.Vname = res.Vname;
                         */
                         result = await con.ExecuteAsync("Update Vehicle set  Vname=@Vname ,VComp=@VComp ,Vnum=@Vnum, " +
