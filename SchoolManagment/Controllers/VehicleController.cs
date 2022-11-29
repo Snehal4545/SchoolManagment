@@ -24,7 +24,7 @@ namespace SchoolManagment.Controllers
         public async Task<IActionResult> InsertTrans(List<vehicle> veh)
         {
             BaseResponseStatus responseStatus = new BaseResponseStatus();
-            _logger.LogDebug(string.Format("tblSchoolController-SaveInformation Calling By save Information  method"));
+            _logger.LogDebug(string.Format("VehicleController-InsertTrans Calling By Insert transaction Method"));
             if (veh != null)
             {
                 var execution = await VehicleInterface.InsertTrans(veh);
@@ -32,7 +32,7 @@ namespace SchoolManagment.Controllers
                 {
                     var rtnmsg = string.Format("Record added successfully..");
                     _logger.LogInformation(rtnmsg);
-                    _logger.LogDebug(string.Format("tblSchoolController-SaveInformation : Completed "));
+                    _logger.LogDebug(string.Format("VehicleController-InsertTrans : Completed "));
                     responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
                     responseStatus.StatusMessage = rtnmsg;
                     return Ok(responseStatus);
@@ -40,7 +40,7 @@ namespace SchoolManagment.Controllers
                 }
                 else 
                 {
-                    var rtnmsg = string.Format("Error while updating");
+                    var rtnmsg = string.Format("Error while Adding");
                     _logger.LogDebug(rtnmsg);
                     responseStatus.StatusCode = StatusCodes.Status409Conflict.ToString();
                     responseStatus.StatusMessage = rtnmsg;
@@ -49,7 +49,7 @@ namespace SchoolManagment.Controllers
             }
             else
             {
-                var rtnmsg = string.Format("Record added successfully..");
+                var rtnmsg = string.Format("Record Added successfully..");
                 _logger.LogDebug(rtnmsg);
                 responseStatus.StatusCode = StatusCodes.Status200OK.ToString();
                 responseStatus.StatusMessage = rtnmsg;
