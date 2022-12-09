@@ -25,7 +25,8 @@ namespace SchoolManagment.Repository
                     // var res1=res.FirstOrDefault();
                     if (res == null)
                     {
-                        result = await con.QueryFirstOrDefaultAsync<int>(" Insert into Vehicle(Vname,VComp,Vnum,Price)" +
+
+                        result = await con.QueryFirstOrDefaultAsync<int>("Insert into Vehicle(Vname,VComp,Vnum,Price)" +
                             " values(@Vname,@VComp,@Vnum,@Price) select cast(scope_identity() as int)", vehicle);
                     }
                     else
@@ -33,7 +34,7 @@ namespace SchoolManagment.Repository
                         vehicle.Vhlid = res.Vhlid;
                         /*
                         vehicle.Vnum = res.Vnum;
-                        vehicle.VComp = res.VComp;xsz
+                        vehicle.VComp = res.VComp;
                         vehicle.Vname = res.Vname;
                         */
                         result = await con.ExecuteAsync("Update Vehicle set  Vname=@Vname ,VComp=@VComp ,Vnum=@Vnum, " +

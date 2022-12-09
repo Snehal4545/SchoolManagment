@@ -10,7 +10,7 @@ namespace SchoolManagment.Repository.Interface
        public  Task<int> SaveInformation(tblSchool sch);
        public Task<int> AddTeacher(tblTeacher tech);
        public Task<int> AddClass(tblClass cls);
-       public  Task<int> UpdateSchool(UpdateSchool sch);
+       public  Task<int> UpdateSchool(UpdateSchool sch); 
        public Task<int> UpdateTeacher(tblTeacher tech);
        public Task<int> DeleteSchool(BaseModel.DeleteObj delete);
 
